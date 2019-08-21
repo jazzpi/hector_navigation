@@ -712,8 +712,8 @@ bool HectorExplorationPlanner::exploreWalls(const geometry_msgs::PoseStamped &st
 
       if(thisDelta >= (unsigned int) p_min_obstacle_dist_){
         if(obstacle_trans_array_[currentPoint] >= (unsigned int) p_min_obstacle_dist_){
-          if(abs(thisDelta - p_min_obstacle_dist_) < minDelta){
-            minDelta = abs(thisDelta - p_min_obstacle_dist_);
+          if(abs((int)thisDelta - p_min_obstacle_dist_) < minDelta){
+            minDelta = abs((int)thisDelta - p_min_obstacle_dist_);
             nextPoint = adjacentPoints[dirPoints[i]];
             oldDirection = dirPoints[i];
           }
@@ -739,9 +739,9 @@ bool HectorExplorationPlanner::exploreWalls(const geometry_msgs::PoseStamped &st
       }
     }
 
-    if(t==3 && abs(obstacle_trans_array_[adjacentPoints[dirPoints[0]]] - obstacle_trans_array_[adjacentPoints[dirPoints[1]]]) < STRAIGHT_COST
-    && abs(obstacle_trans_array_[adjacentPoints[dirPoints[0]]] - obstacle_trans_array_[adjacentPoints[dirPoints[2]]]) < STRAIGHT_COST
-    && abs(obstacle_trans_array_[adjacentPoints[dirPoints[1]]] - obstacle_trans_array_[adjacentPoints[dirPoints[2]]]) < STRAIGHT_COST){
+    if(t==3 && abs((int)(obstacle_trans_array_[adjacentPoints[dirPoints[0]]] - obstacle_trans_array_[adjacentPoints[dirPoints[1]]])) < STRAIGHT_COST
+    && abs((int)(obstacle_trans_array_[adjacentPoints[dirPoints[0]]] - obstacle_trans_array_[adjacentPoints[dirPoints[2]]])) < STRAIGHT_COST
+    && abs((int)(obstacle_trans_array_[adjacentPoints[dirPoints[1]]] - obstacle_trans_array_[adjacentPoints[dirPoints[2]]])) < STRAIGHT_COST){
       nextPoint=adjacentPoints[dirPoints[2]];
       oldDirection=dirPoints[2];
     }
