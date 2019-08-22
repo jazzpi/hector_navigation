@@ -974,7 +974,7 @@ bool HectorExplorationPlanner::buildobstacle_trans_array_(bool use_inflated_obst
       myqueue.push(i);
       obstacle_trans_array_[i] = 0;
     } else if(use_inflated_obstacles){
-      if(occupancy_grid_array_[i] == costmap_2d::INSCRIBED_INFLATED_OBSTACLE){
+      if(occupancy_grid_array_[i] == 0){
         myqueue.push(i);
         obstacle_trans_array_[i] = 0;
       }
@@ -1633,16 +1633,14 @@ inline bool HectorExplorationPlanner::isValid(int point){
 }
 
 bool HectorExplorationPlanner::isFree(int point){
-
   if(isValid(point)){
-    // if a point is not inscribed_inflated_obstacle, leathal_obstacle or no_information, its free
-
-
     if(p_use_inflated_obs_){
-      if(occupancy_grid_array_[point] < costmap_2d::INSCRIBED_INFLATED_OBSTACLE){
+      // if a point has no cost, its free
+      if(occupancy_grid_array_[point] == 0){
         return true;
       }
     } else {
+      // if a point is not lethal_obstacle or no_information, its free
       if(occupancy_grid_array_[point] <= costmap_2d::INSCRIBED_INFLATED_OBSTACLE){
         return true;
       }
@@ -1658,16 +1656,14 @@ bool HectorExplorationPlanner::isFree(int point){
 }
 
 bool HectorExplorationPlanner::isFreeFrontiers(int point){
-
   if(isValid(point)){
-    // if a point is not inscribed_inflated_obstacle, leathal_obstacle or no_information, its free
-
-
     if(p_use_inflated_obs_){
-      if(occupancy_grid_array_[point] < costmap_2d::INSCRIBED_INFLATED_OBSTACLE){
+      // if a point has no cost, its free
+      if(occupancy_grid_array_[point] == 0){
         return true;
       }
     } else {
+      // if a point is not lethal_obstacle or no_information, its free
       if(occupancy_grid_array_[point] <= costmap_2d::INSCRIBED_INFLATED_OBSTACLE){
         return true;
       }
