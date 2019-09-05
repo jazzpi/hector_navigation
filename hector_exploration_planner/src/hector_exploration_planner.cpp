@@ -974,7 +974,7 @@ bool HectorExplorationPlanner::buildobstacle_trans_array_(bool use_inflated_obst
       myqueue.push(i);
       obstacle_trans_array_[i] = 0;
     } else if(use_inflated_obstacles){
-      if(occupancy_grid_array_[i] == 0){
+      if(occupancy_grid_array_[i] > 0){
         myqueue.push(i);
         obstacle_trans_array_[i] = 0;
       }
