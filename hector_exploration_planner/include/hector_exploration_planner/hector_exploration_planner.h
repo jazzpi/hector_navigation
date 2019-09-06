@@ -68,6 +68,9 @@ public:
     * @param plan The plan to explore into unknown space
     */
   bool doExploration(const geometry_msgs::PoseStamped &start,std::vector<geometry_msgs::PoseStamped> &plan);
+  bool doExploration(const geometry_msgs::PoseStamped &start,
+                     const boost::optional<geometry_msgs::PoseStamped> &goal,
+                     std::vector<geometry_msgs::PoseStamped> &plan);
 
   /**
     * This can be used if there are no frontiers to unknown space left in the map. The robot will retrieve it's path travelled so far via a service
@@ -102,6 +105,9 @@ private:
   void deleteMapData();
   bool buildobstacle_trans_array_(bool use_inflated_obstacles);
   bool buildexploration_trans_array_(const geometry_msgs::PoseStamped &start, std::vector<geometry_msgs::PoseStamped> goals,bool useAnglePenalty, bool use_cell_danger = true);
+  bool buildexploration_trans_array_(const geometry_msgs::PoseStamped &start,
+                                     const boost::optional<geometry_msgs::PoseStamped> &goal,
+                                     std::vector<geometry_msgs::PoseStamped> goals,bool useAnglePenalty, bool use_cell_danger = true);
   bool getTrajectory(const geometry_msgs::PoseStamped &start, std::vector<geometry_msgs::PoseStamped> goals, std::vector<geometry_msgs::PoseStamped> &plan);
   bool recoveryMakePlan(const geometry_msgs::PoseStamped &start, const geometry_msgs::PoseStamped &goal,std::vector<geometry_msgs::PoseStamped> &plan);
   unsigned int cellDanger(int point);
@@ -148,6 +154,8 @@ private:
 
   bool initialized_;
   int previous_goal_;
+
+  boost::optional<geometry_msgs::Pose> goal_;
 
   std::string name;
   unsigned int map_width_;

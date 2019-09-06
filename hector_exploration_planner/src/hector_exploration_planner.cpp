@@ -200,10 +200,13 @@ bool HectorExplorationPlanner::makePlan(const geometry_msgs::PoseStamped &start,
   return true;
 }
 
-bool HectorExplorationPlanner::doExploration(const geometry_msgs::PoseStamped &start, std::vector<geometry_msgs::PoseStamped> &plan){
+bool HectorExplorationPlanner::doExploration(const geometry_msgs::PoseStamped &start,std::vector<geometry_msgs::PoseStamped> &plan) {
+  return doExploration(start, {}, plan);
+}
 
-
-
+bool HectorExplorationPlanner::doExploration(const geometry_msgs::PoseStamped &start,
+                                             const boost::optional<geometry_msgs::PoseStamped> &goal,
+                                             std::vector<geometry_msgs::PoseStamped> &plan){
   this->setupMapData();
 
   // setup maps and goals
@@ -244,7 +247,7 @@ bool HectorExplorationPlanner::doExploration(const geometry_msgs::PoseStamped &s
   }
 
   // make plan
-  if(!buildexploration_trans_array_(start,goals,true)){
+  if(!buildexploration_trans_array_(start,goal,goals,true)){
     return false;
   }
 
@@ -834,6 +837,12 @@ void HectorExplorationPlanner::deleteMapData()
 
 
 bool HectorExplorationPlanner::buildexploration_trans_array_(const geometry_msgs::PoseStamped &start, std::vector<geometry_msgs::PoseStamped> goals, bool useAnglePenalty, bool use_cell_danger){
+  return buildexploration_trans_array_(start, {}, goals, useAnglePenalty, use_cell_danger);
+}
+
+bool HectorExplorationPlanner::buildexploration_trans_array_(const geometry_msgs::PoseStamped &start,
+                                                             const boost::optional<geometry_msgs::PoseStamped> &goal,
+                                                             std::vector<geometry_msgs::PoseStamped> goals, bool useAnglePenalty, bool use_cell_danger){
 
   ROS_DEBUG("[hector_exploration_planner] buildexploration_trans_array_");
 
@@ -867,6 +876,14 @@ bool HectorExplorationPlanner::buildexploration_trans_array_(const geometry_msgs
     unsigned int init_cost = 0;
     if(false){
       init_cost = angleDanger(angleDifference(start,goals[i])) * getDistanceWeight(start,goals[i]);
+    }
+
+    if (goal) {
+      double dist = std::sqrt(
+          std::pow(goals[i].pose.position.x - goal->pose.position.x, 2) +
+          std::pow(goals[i].pose.position.y - goal->pose.position.y, 2));
+      // TODO: Add parameter for the factor here
+      init_cost += STRAIGHT_COST * 100 * (dist / costmap_->getResolution());
     }
 
     exploration_trans_array_[goal_point] = init_cost;
