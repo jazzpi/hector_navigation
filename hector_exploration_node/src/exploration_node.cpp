@@ -30,7 +30,7 @@
 #include <ros/ros.h>
 #include <hector_exploration_planner/hector_exploration_planner.h>
 #include <costmap_2d/costmap_2d_ros.h>
-#include <hector_nav_msgs/GetRobotTrajectory.h>
+#include <nav_msgs/GetPlan.h>
 
 class SimpleExplorationPlanner
 {
@@ -49,8 +49,8 @@ public:
     exploration_plan_pub_ = nh.advertise<nav_msgs::Path>("exploration_path",2);
   }
 
-  bool explorationServiceCallback(hector_nav_msgs::GetRobotTrajectory::Request  &req,
-                                  hector_nav_msgs::GetRobotTrajectory::Response &res )
+  bool explorationServiceCallback(nav_msgs::GetPlan::Request  &req,
+                                  nav_msgs::GetPlan::Response &res )
     {
       ROS_INFO("Exploration Service called");
 
@@ -59,13 +59,14 @@ public:
 
       geometry_msgs::PoseStamped pose;
       tf::poseStampedTFToMsg(robot_pose_tf, pose);
-      planner_->doExploration(pose, res.trajectory.poses);
-      res.trajectory.header.frame_id = "map";
-      res.trajectory.header.stamp = ros::Time::now();
+
+      planner_->doExploration(pose, req.goal, res.plan.poses);
+      res.plan.header.frame_id = "map";
+      res.plan.header.stamp = ros::Time::now();
 
       if (exploration_plan_pub_.getNumSubscribers() > 0)
       {
-        exploration_plan_pub_.publish(res.trajectory);
+        exploration_plan_pub_.publish(res.plan);
       }
 
       return true;
