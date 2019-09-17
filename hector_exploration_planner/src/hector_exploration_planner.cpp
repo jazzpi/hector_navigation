@@ -883,7 +883,7 @@ bool HectorExplorationPlanner::buildexploration_trans_array_(const geometry_msgs
           std::pow(goals[i].pose.position.x - goal->pose.position.x, 2) +
           std::pow(goals[i].pose.position.y - goal->pose.position.y, 2));
       // TODO: Add parameter for the factor here
-      init_cost += STRAIGHT_COST * 100 * (dist / costmap_->getResolution());
+      init_cost += STRAIGHT_COST * 2.5 * (dist / costmap_->getResolution());
     }
 
     exploration_trans_array_[goal_point] = init_cost;
