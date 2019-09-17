@@ -1736,7 +1736,7 @@ bool HectorExplorationPlanner::isSameFrontier(int frontier_point1, int frontier_
 
 inline unsigned int HectorExplorationPlanner::cellDanger(int point){
 
-  if ((int)obstacle_trans_array_[point] <= p_min_obstacle_dist_){
+  if (obstacle_trans_array_[point] <= p_min_obstacle_dist_){
     return static_cast<unsigned int>(p_alpha_ * std::pow(p_min_obstacle_dist_ - obstacle_trans_array_[point], 2) + .5);
   }
   //ROS_INFO("%d", (int)obstacle_trans_array_[point] );
